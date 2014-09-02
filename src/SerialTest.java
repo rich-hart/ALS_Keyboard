@@ -5,7 +5,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.PipedOutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
 
 import gnu.io.CommPortIdentifier; 
 import gnu.io.SerialPort;
@@ -15,9 +16,10 @@ import gnu.io.SerialPortEventListener;
 import java.util.Enumeration;
 
 
-public class SerialTest extends Thread implements SerialPortEventListener {
-	PipedOutputStream pipe_output;
+public class SerialTest implements SerialPortEventListener {
 	SerialPort serialPort;
+    private static final int CHAT_PORT = 9001;
+    private static final String SERVER_ADDRESS = "10.0.0.16";
         /** The port we're normally going to use. */
 	private static final String PORT_NAMES[] = { 
 			"/dev/tty.usbserial-A9007UX1", // Mac OS X
@@ -38,8 +40,15 @@ public class SerialTest extends Thread implements SerialPortEventListener {
 	private static final int TIME_OUT = 2000;
 	/** Default bits per second for COM port. */
 	private static final int DATA_RATE = 9600;
-	SerialTest(PipedOutputStream output){
-		pipe_output=output;
+	
+	private Socket socket;
+	private BufferedReader in;
+	
+	SerialTest() throws IOException{
+		ServerSocket listener = new ServerSocket(CHAT_PORT);
+		socket = listener.accept();
+		 in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+		 
 	}
 	public void initialize() {
                 // the next line is for Raspberry Pi and 
@@ -121,12 +130,17 @@ public class SerialTest extends Thread implements SerialPortEventListener {
 			//String h_value = Integer.toHexString(i_value);
 			//String b_value = Integer.toBinaryString(i_value);
 			//output.write((byte)0x00);
-			char c = 'c';
-			output.write(c);
-			c++;
-			output.write(c);
-			c++;
-			output.write(c);
+			if(in.ready()){
+			String input = in.readLine();
+			//char c = 'c';
+			for(int i =0; i<input.length();i++){
+				output.write(input.charAt(i));
+			}
+			}
+			//c++;
+			//output.write(c);
+			//c++;
+			//output.write(c);
 			//output.write({(byte)'c',(byte)'d'});
 			
 			
@@ -140,9 +154,10 @@ public class SerialTest extends Thread implements SerialPortEventListener {
 		
 		// Ignore all the other eventTypes, but you should consider the other ones.
 	}
-	public void run() {
-		
-		initialize();
+
+	public static void main(String[] args) throws Exception {
+		SerialTest main = new SerialTest();
+		main.initialize();
 		Thread t=new Thread() {
 			public void run() {
 				//the following line will keep this app alive for 1000 seconds,
@@ -153,11 +168,6 @@ public class SerialTest extends Thread implements SerialPortEventListener {
 		};
 		t.start();
 		System.out.println("Started");
-		
-	}
-	public static void main(String[] args) throws Exception {
-		SerialTest main = new SerialTest();
-		main.start();
 		
 	}
 }

@@ -4,7 +4,6 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PipedInputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -29,14 +28,14 @@ import java.util.HashSet;
  *
  *     2. The server should do some logging.
  */
-public class ChatServer extends Thread  {
-	public PipedInputStream pipe_input;
+public class ChatServer {
+
     /**
      * The port that the server listens on.
      */
-	
     private static final int PORT = 9001;
-
+    //private static final int PORT = 9001;
+    private static final String SERVER_ADDRESS = "10.0.0.16";
     /**
      * The set of all names of clients in the chat room.  Maintained
      * so that we can check that new clients are not registering name
@@ -54,12 +53,8 @@ public class ChatServer extends Thread  {
      * The appplication main method, which just listens on a port and
      * spawns handler threads.
      */
-    ChatServer(PipedInputStream input){
-    	pipe_input=input;
-    }
-    public void run() {
-    	try {
-    	System.out.println("The chat server is running.");
+    public static void main(String[] args) throws Exception {
+        System.out.println("The chat server is running.");
         ServerSocket listener = new ServerSocket(PORT);
         try {
             while (true) {
@@ -67,12 +62,7 @@ public class ChatServer extends Thread  {
             }
         } finally {
             listener.close();
-        }} catch (IOException e) {System.out.println(e);}
-    	
-    }
-    public static void main(String[] args) throws Exception {
-    	//ChatServer s = new ChatServer();
-    	//s.start();
+        }
     }
 
     /**
@@ -81,7 +71,6 @@ public class ChatServer extends Thread  {
      * and broadcasting its messages.
      */
     private static class Handler extends Thread {
-    	public PipedInputStream pipe_input;
         private String name;
         private Socket socket;
         private BufferedReader in;
@@ -133,15 +122,15 @@ public class ChatServer extends Thread  {
 
                 // Accept messages from this client and broadcast them.
                 // Ignore other clients that cannot be broadcasted to.
+                
                 while (true) {
                     String input = in.readLine();
                     if (input == null) {
                         return;
                     }
                     for (PrintWriter writer : writers) {
-                        writer.println("MESSAGE " + name + ": " + input);
+                        //writer.println("MESSAGE " + name + ": " + input);
                         System.out.println("MESSAGE " + name + ": " + input);
-                        
                     }
                 }
             } catch (IOException e) {

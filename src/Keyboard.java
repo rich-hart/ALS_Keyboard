@@ -90,8 +90,7 @@ public class Keyboard extends JPanel implements MouseListener {
 	public static void createSocket() throws UnknownHostException, IOException{
         //String serverAddress = getServerAddress();
         socket = new Socket(SERVER_ADDRESS, PORT);
-        in = new BufferedReader(new InputStreamReader(
-            socket.getInputStream()));
+        //in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         out = new PrintWriter(socket.getOutputStream(), true);
         out.println("keyboard");
         while (true) {
@@ -192,7 +191,7 @@ public class Keyboard extends JPanel implements MouseListener {
 	    		  
 	    	  }else if(key_pressed.equalsIgnoreCase("enter")){
 
-	                out.println(keyboard_entry.getText());
+	                out.println(keyboard_entry.getText()+"\n");
 	                keyboard_entry.setText("");
 	    	  } else{
 	    	  
@@ -226,6 +225,7 @@ public class Keyboard extends JPanel implements MouseListener {
 		
 	}
 	
+	
     public static void main(String[] args) {
         //Schedule a job for the event-dispatching thread:
         //creating and showing this application's GUI.
@@ -245,5 +245,4 @@ public class Keyboard extends JPanel implements MouseListener {
             }
         });
     }
-
 }

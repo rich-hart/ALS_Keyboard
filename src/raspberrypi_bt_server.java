@@ -16,11 +16,7 @@ public class raspberrypi_bt_server{
 	public static void main(String[] args) throws IOException{
 		PipedOutputStream output = new PipedOutputStream();
 		PipedInputStream input = new PipedInputStream(output);
-		
-		SerialTest main = new SerialTest(output);
-		main.start();
-		ChatServer s = new ChatServer(input);
-    	s.start();
+
 	}
 	
 }
