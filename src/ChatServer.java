@@ -34,7 +34,8 @@ public class ChatServer {
      * The port that the server listens on.
      */
     private static final int PORT = 9001;
-
+    //private static final int PORT = 9001;
+    private static final String SERVER_ADDRESS = "10.0.0.16";
     /**
      * The set of all names of clients in the chat room.  Maintained
      * so that we can check that new clients are not registering name
@@ -127,7 +128,7 @@ public class ChatServer {
                         return;
                     }
                     for (PrintWriter writer : writers) {
-                        writer.println("MESSAGE " + name + ": " + input);
+                        //writer.println("MESSAGE " + name + ": " + input);
                         System.out.println("MESSAGE " + name + ": " + input);
                     }
                 }
