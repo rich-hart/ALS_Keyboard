@@ -34,6 +34,9 @@ public class ChatClient {
 
     BufferedReader in;
     PrintWriter out;
+    private static final int PORT = 9001;
+    
+    
     JFrame frame = new JFrame("Chatter");
     JTextField textField = new JTextField(40);
     JTextArea messageArea = new JTextArea(8, 40);

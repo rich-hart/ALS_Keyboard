@@ -4,6 +4,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -24,6 +30,12 @@ import javax.swing.Timer;
 
 public class Keyboard extends JPanel implements MouseListener {
 	
+    static BufferedReader in;
+    static PrintWriter out;
+    private static final int PORT = 9001;
+    private static final String SERVER_ADDRESS = "10.0.0.16";
+    static Socket socket;
+    
 	private String[] layer3b={"!","@","#","$","%","^","&","*","(",")"};
 	private String[] layer3={"1","2","3","4","5","6","7","8","9","0"};
 	private String[] layer2={"q","w","e","r","t","y","u","i","o","p"};
@@ -32,11 +44,13 @@ public class Keyboard extends JPanel implements MouseListener {
 	private String[] layer_1={"backspace","space","enter","clear"};
 	ArrayList<JButton> buttonlist = new ArrayList();
 	JButton pressed_key=null;
-	TextField keyboard_entry;
+	static TextField keyboard_entry;
 	Timer timer;
 
 	private static String key_pressed="";
 	static int time_delay = 800;
+	
+	
 	
 	public Keyboard(){
 		
@@ -67,26 +81,29 @@ public class Keyboard extends JPanel implements MouseListener {
         Keyboard newContentPane = new Keyboard();
         newContentPane.setOpaque(true); //content panes must be opaque
         frame.setContentPane(newContentPane);
-        //frame.add(newContentPane);
-        //Display the window.
+
         frame.pack();
         frame.setVisible(true);
-        /*
-        while(true){
-        	while(key_pressed.equalsIgnoreCase("")){}
-        	String last_key= key_pressed;
-        	double start = System.currentTimeMillis();
-        	while(last_key.equalsIgnoreCase(key_pressed)){
-        	
-        		if(System.currentTimeMillis()-start<time_delay){
-        			System.out.println(key_pressed);
-        			key_pressed="";
-        		}
-        	
-        	
-        	}
-        }*/
+        
     }
+	
+	public static void createSocket() throws UnknownHostException, IOException{
+        //String serverAddress = getServerAddress();
+        socket = new Socket(SERVER_ADDRESS, PORT);
+        in = new BufferedReader(new InputStreamReader(
+            socket.getInputStream()));
+        out = new PrintWriter(socket.getOutputStream(), true);
+        out.println("keyboard");
+        while (true) {
+            String line = in.readLine();
+            if (line.startsWith("NAMEACCEPTED")) {
+            	keyboard_entry.setEditable(true);
+            	break;
+            } 
+        }
+		
+	}
+	
     
     public JPanel createLayerPanel(String [] keys){
     	JPanel layer1_panel = new JPanel();
@@ -105,15 +122,7 @@ public class Keyboard extends JPanel implements MouseListener {
     	
     }
     
-    public static void main(String[] args) {
-        //Schedule a job for the event-dispatching thread:
-        //creating and showing this application's GUI.
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                createAndShowGUI(); 
-            }
-        });
-    }
+
 
 
 
@@ -183,7 +192,8 @@ public class Keyboard extends JPanel implements MouseListener {
 	    		  
 	    	  }else if(key_pressed.equalsIgnoreCase("enter")){
 
-	    		  
+	                out.println(keyboard_entry.getText());
+	                keyboard_entry.setText("");
 	    	  } else{
 	    	  
 	    	  text_string=text_string+key_pressed;
@@ -216,4 +226,24 @@ public class Keyboard extends JPanel implements MouseListener {
 		
 	}
 	
+	
+    public static void main(String[] args) {
+        //Schedule a job for the event-dispatching thread:
+        //creating and showing this application's GUI.
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                createAndShowGUI();
+                try {
+					createSocket();
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+                
+            }
+        });
+    }
 }
