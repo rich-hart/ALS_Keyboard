@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.PipedOutputStream;
 
 import gnu.io.CommPortIdentifier; 
 import gnu.io.SerialPort;
@@ -14,7 +15,8 @@ import gnu.io.SerialPortEventListener;
 import java.util.Enumeration;
 
 
-public class SerialTest implements SerialPortEventListener {
+public class SerialTest extends Thread implements SerialPortEventListener {
+	PipedOutputStream pipe_output;
 	SerialPort serialPort;
         /** The port we're normally going to use. */
 	private static final String PORT_NAMES[] = { 
@@ -36,7 +38,9 @@ public class SerialTest implements SerialPortEventListener {
 	private static final int TIME_OUT = 2000;
 	/** Default bits per second for COM port. */
 	private static final int DATA_RATE = 9600;
-
+	SerialTest(PipedOutputStream output){
+		pipe_output=output;
+	}
 	public void initialize() {
                 // the next line is for Raspberry Pi and 
                 // gets us into the while loop and was suggested here was suggested http://www.raspberrypi.org/phpBB3/viewtopic.php?f=81&t=32186
@@ -136,10 +140,9 @@ public class SerialTest implements SerialPortEventListener {
 		
 		// Ignore all the other eventTypes, but you should consider the other ones.
 	}
-
-	public static void main(String[] args) throws Exception {
-		SerialTest main = new SerialTest();
-		main.initialize();
+	public void run() {
+		
+		initialize();
 		Thread t=new Thread() {
 			public void run() {
 				//the following line will keep this app alive for 1000 seconds,
@@ -150,6 +153,11 @@ public class SerialTest implements SerialPortEventListener {
 		};
 		t.start();
 		System.out.println("Started");
+		
+	}
+	public static void main(String[] args) throws Exception {
+		SerialTest main = new SerialTest();
+		main.start();
 		
 	}
 }
