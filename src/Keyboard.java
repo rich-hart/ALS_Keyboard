@@ -34,8 +34,12 @@ public class Keyboard extends JPanel implements MouseListener , KeyListener{
 	
     static BufferedReader in;
     static PrintWriter out;
-    private static final int PORT = 9001;
+    
+    //private static final int PORT = 9001;
+    private static final int PORT = 5000;
+    
     private static final String SERVER_ADDRESS = "10.0.0.16";
+    
     static Socket socket;
     
 	private String[] layer3b={"!","@","#","$","%","^","&","*","(",")"};
@@ -44,9 +48,14 @@ public class Keyboard extends JPanel implements MouseListener , KeyListener{
 	private String[] layer1={"a","s","d","f","g","h","j","k","l"};
 	private String[] layer0={"z","x","c","v","b","n","m","shift"};
 	private String[] layer_1={"backspace","space","enter","clear"};
+	
 	ArrayList<JButton> buttonlist = new ArrayList();
+	
+	
 	JButton pressed_key=null;
+	
 	static TextField keyboard_entry;
+	
 	Timer timer;
 
 	private static String key_pressed="";
@@ -98,13 +107,13 @@ public class Keyboard extends JPanel implements MouseListener , KeyListener{
         //in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         out = new PrintWriter(socket.getOutputStream(), true);
         out.println("keyboard");
-        while (true) {
-            String line = in.readLine();
-            if (line.startsWith("NAMEACCEPTED")) {
+        //while (true) {
+            //String line = in.readLine();
+            //if (line.startsWith("NAMEACCEPTED")) {
             	
-            	break;
-            } 
-        }
+            	//break;
+            //} 
+        //}
 		
 	}
 	
@@ -169,8 +178,8 @@ public class Keyboard extends JPanel implements MouseListener , KeyListener{
 		  			JButton button = buttonlist.get(i);
 		  			if(button.getText()==key_pressed){
 		  				button.setEnabled(false);
-		  			
-		  			
+		  				button.setDefaultCapable(false);
+		  				
 		  			//key_pressed=button.getText();
 		  			
 		  			//timer.start();
@@ -196,7 +205,7 @@ public class Keyboard extends JPanel implements MouseListener , KeyListener{
 	    		  
 	    	  }else if(key_pressed.equalsIgnoreCase("enter")){
 
-	                out.println(keyboard_entry.getText()+"\n");
+	                out.println(keyboard_entry.getText());
 	                keyboard_entry.setText("");
 	    	  } else{
 	    	  
@@ -204,11 +213,14 @@ public class Keyboard extends JPanel implements MouseListener , KeyListener{
 	    	  keyboard_entry.setText(text_string);
 	    	  
 	    	  }
+	    	  keyboard_entry.requestFocus();
 	    	  keyboard_entry.setCaretPosition(text_string.length());
+	    	  
 	    	  timer.stop();
 	    	  //System.out.println("taskperformer");
 	    	  //timer = new Timer(time_delay, taskPerformer);
 	      }
+	     
 	  };
 
 	@Override
@@ -216,18 +228,23 @@ public class Keyboard extends JPanel implements MouseListener , KeyListener{
 		// TODO Auto-generated method stub
 		key_pressed="";
 		timer.stop();
+		keyboard_entry.requestFocus();
 		
 	}
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
 		//System.out.print("highlighted");
+		 //keyboard_entry.setCaretPosition(keyboard_entry.getText().length());
+		 keyboard_entry.requestFocus();
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		
+		//keyboard_entry.setCaretPosition(keyboard_entry.getText().length());
+		keyboard_entry.requestFocus();
+		//keyboard_entry.setEnabled(true);
 	}
 	
 	
@@ -266,8 +283,15 @@ public class Keyboard extends JPanel implements MouseListener , KeyListener{
 	@Override
 	public void keyTyped(KeyEvent arg0) {
 		// TODO Auto-generated method stub
-		
+		keyboard_entry.requestFocus();
 		System.out.println("key pressed: "+arg0.getKeyChar());
+		if(arg0.getKeyChar()==' '){
+			System.out.println("key pressed: "+'`');
+			out.println('`');
+		} else if(arg0.getKeyChar()=='\n'){
+			System.out.println("key pressed: "+'~');
+			out.println('~');
+		}
 		
 	}
 }
