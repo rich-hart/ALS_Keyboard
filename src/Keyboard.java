@@ -2,6 +2,8 @@ import java.awt.GridLayout;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.BufferedReader;
@@ -28,7 +30,7 @@ import javax.swing.Timer;
 
 
 
-public class Keyboard extends JPanel implements MouseListener {
+public class Keyboard extends JPanel implements MouseListener , KeyListener{
 	
     static BufferedReader in;
     static PrintWriter out;
@@ -58,9 +60,11 @@ public class Keyboard extends JPanel implements MouseListener {
 		GridLayout experimentLayout =new GridLayout(layers.length+1,1);
 		this.setLayout(experimentLayout);
 		keyboard_entry= new TextField("", 20);
+		keyboard_entry.setEditable(true);
 		//keyboard_entry.addMouseListener(this);
 		this.add(keyboard_entry);
-		
+		keyboard_entry.addKeyListener(this);
+		//this.addKeyListener(this);
 		for(int i = 0; i<layers.length;i++){
 			JPanel layer_panel = createLayerPanel(layers[i]);
 			this.add(layer_panel);
@@ -83,6 +87,7 @@ public class Keyboard extends JPanel implements MouseListener {
         frame.setContentPane(newContentPane);
 
         frame.pack();
+        //frame.addKeyListener(this);
         frame.setVisible(true);
         
     }
@@ -96,7 +101,7 @@ public class Keyboard extends JPanel implements MouseListener {
         while (true) {
             String line = in.readLine();
             if (line.startsWith("NAMEACCEPTED")) {
-            	keyboard_entry.setEditable(true);
+            	
             	break;
             } 
         }
@@ -245,4 +250,24 @@ public class Keyboard extends JPanel implements MouseListener {
             }
         });
     }
+
+	@Override
+	public void keyPressed(KeyEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyReleased(KeyEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyTyped(KeyEvent arg0) {
+		// TODO Auto-generated method stub
+		
+		System.out.println("key pressed: "+arg0.getKeyChar());
+		
+	}
 }

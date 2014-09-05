@@ -34,8 +34,7 @@ public class ChatServer {
      * The port that the server listens on.
      */
     private static final int PORT = 9001;
-    //private static final int PORT = 9001;
-    private static final String SERVER_ADDRESS = "10.0.0.16";
+
     /**
      * The set of all names of clients in the chat room.  Maintained
      * so that we can check that new clients are not registering name
@@ -106,12 +105,15 @@ public class ChatServer {
                 while (true) {
                     out.println("SUBMITNAME");
                     name = in.readLine();
-
-                        if (name.equalsIgnoreCase("keyboard")) {
-                            //names.add(name);
+                    if (name == null) {
+                        return;
+                    }
+                    synchronized (names) {
+                        if (!names.contains(name)) {
+                            names.add(name);
                             break;
                         }
-                    
+                    }
                 }
 
                 // Now that a successful name has been chosen, add the
@@ -122,15 +124,13 @@ public class ChatServer {
 
                 // Accept messages from this client and broadcast them.
                 // Ignore other clients that cannot be broadcasted to.
-                
                 while (true) {
                     String input = in.readLine();
                     if (input == null) {
                         return;
                     }
                     for (PrintWriter writer : writers) {
-                        //writer.println("MESSAGE " + name + ": " + input);
-                        System.out.println("MESSAGE " + name + ": " + input);
+                        writer.println("MESSAGE " + name + ": " + input);
                     }
                 }
             } catch (IOException e) {

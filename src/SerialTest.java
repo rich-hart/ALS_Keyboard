@@ -115,7 +115,7 @@ public class SerialTest implements SerialPortEventListener {
 		if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
 			try {
 				String inputLine=input.readLine();
-				System.out.println(inputLine);
+				//System.out.println(inputLine);
 				break;
 				
 			} catch (Exception e) {
