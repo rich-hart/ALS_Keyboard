@@ -38,7 +38,7 @@ public class Keyboard extends JPanel implements MouseListener , KeyListener{
     //private static final int PORT = 9001;
     private static final int PORT = 5000;
     
-    private static final String SERVER_ADDRESS = "10.0.0.16";
+    private static final String SERVER_ADDRESS = "10.0.0.19";
     
     static Socket socket;
     
