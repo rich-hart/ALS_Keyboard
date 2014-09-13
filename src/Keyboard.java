@@ -46,7 +46,7 @@ public class Keyboard extends JPanel implements MouseListener , KeyListener{
 	private String[] layer3={"1","2","3","4","5","6","7","8","9","0"};
 	private String[] layer2={"q","w","e","r","t","y","u","i","o","p"};
 	private String[] layer1={"a","s","d","f","g","h","j","k","l"};
-	private String[] layer0={"z","x","c","v","b","n","m","shift"};
+	private String[] layer0={"z","x","c","v","b","n","m",".","shift"};
 	private String[] layer_1={"backspace","space","enter","clear"};
 	
 	ArrayList<JButton> buttonlist = new ArrayList();
