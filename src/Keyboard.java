@@ -132,7 +132,7 @@ public class Keyboard extends JPanel implements MouseListener , KeyListener{
     		String key = keys[i];
     		JButton button = new JButton(key);
     		
-    		button.setFont(new Font(key,Font.PLAIN,20));
+    		button.setFont(new Font(key,Font.PLAIN,30));
     		button.addMouseListener(this);
     		//button.addActionListener(this);
     		layer1_panel.add(button);
