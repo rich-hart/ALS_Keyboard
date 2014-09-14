@@ -1,3 +1,4 @@
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
@@ -130,6 +131,8 @@ public class Keyboard extends JPanel implements MouseListener , KeyListener{
     	for(int i =0;i<keys.length;i++){
     		String key = keys[i];
     		JButton button = new JButton(key);
+    		
+    		button.setFont(new Font(key,Font.PLAIN,20));
     		button.addMouseListener(this);
     		//button.addActionListener(this);
     		layer1_panel.add(button);
