@@ -42,12 +42,14 @@ public class Keyboard extends JPanel implements MouseListener , KeyListener{
     
     static Socket socket;
     
+    private String[] layer_4={"toggle keyboard","start scanning","previous item","next item","stop scanning","toggle switch"};
 	private String[] layer3b={"!","@","#","$","%","^","&","*","(",")"};
 	private String[] layer3={"1","2","3","4","5","6","7","8","9","0"};
 	private String[] layer2={"q","w","e","r","t","y","u","i","o","p"};
 	private String[] layer1={"a","s","d","f","g","h","j","k","l"};
 	private String[] layer0={"z","x","c","v","b","n","m",".","shift"};
 	private String[] layer_1={"backspace","space","enter","clear"};
+	
 	
 	ArrayList<JButton> buttonlist = new ArrayList();
 	
@@ -66,16 +68,18 @@ public class Keyboard extends JPanel implements MouseListener , KeyListener{
 	public Keyboard(){
 		
 		String[][] layers ={layer3,layer2,layer1,layer0,layer_1};
-		GridLayout experimentLayout =new GridLayout(layers.length+1,1);
+		GridLayout experimentLayout =new GridLayout(layers.length+2,1);
 		this.setLayout(experimentLayout);
 		keyboard_entry= new TextField("", 20);
 		keyboard_entry.setEditable(true);
 		//keyboard_entry.addMouseListener(this);
+		JPanel layer_panel = createLayerPanel(layer_4);
+		this.add(layer_panel);
 		this.add(keyboard_entry);
 		keyboard_entry.addKeyListener(this);
 		//this.addKeyListener(this);
 		for(int i = 0; i<layers.length;i++){
-			JPanel layer_panel = createLayerPanel(layers[i]);
+			layer_panel = createLayerPanel(layers[i]);
 			this.add(layer_panel);
 			
 		}
@@ -207,7 +211,19 @@ public class Keyboard extends JPanel implements MouseListener , KeyListener{
 
 	                out.println(keyboard_entry.getText());
 	                keyboard_entry.setText("");
-	    	  } else{
+	    	  } else if(key_pressed.equalsIgnoreCase("toggle keyboard")){
+	    		  out.println('{');
+	    	  }else if(key_pressed.equalsIgnoreCase("toggle switch")){
+	    		  out.println('}');
+	    	  }else if(key_pressed.equalsIgnoreCase("start scanning")){
+	    		  out.println('[');
+	    	  }else if(key_pressed.equalsIgnoreCase("previous item")){
+	    		  out.println(']');
+	    	  }else if(key_pressed.equalsIgnoreCase("next item")){
+	    		  out.println('|');
+	    	  }else if(key_pressed.equalsIgnoreCase("stop scanning")){
+	    		  out.println('<');
+	    	  }else{
 	    	  
 	    	  text_string=text_string+key_pressed;
 	    	  keyboard_entry.setText(text_string);
