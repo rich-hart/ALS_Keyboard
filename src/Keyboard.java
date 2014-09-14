@@ -38,11 +38,12 @@ public class Keyboard extends JPanel implements MouseListener , KeyListener{
     //private static final int PORT = 9001;
     private static final int PORT = 5000;
     
-    private static final String SERVER_ADDRESS = "10.0.0.19";
-    
+    //private static final String SERVER_ADDRESS = "10.0.0.19";//pi
+    //private static final String SERVER_ADDRESS = "10.0.0.16";//destop
+    private static final String SERVER_ADDRESS = "localhost";
     static Socket socket;
     
-    private String[] layer_4={"toggle keyboard","start scanning","previous item","next item","stop scanning","toggle switch"};
+    private String[] layer_4={"toggle keyboard","select","resume scan","previous item","next item","home","toggle switch"};
 	private String[] layer3b={"!","@","#","$","%","^","&","*","(",")"};
 	private String[] layer3={"1","2","3","4","5","6","7","8","9","0"};
 	private String[] layer2={"q","w","e","r","t","y","u","i","o","p"};
@@ -212,17 +213,27 @@ public class Keyboard extends JPanel implements MouseListener , KeyListener{
 	                out.println(keyboard_entry.getText());
 	                keyboard_entry.setText("");
 	    	  } else if(key_pressed.equalsIgnoreCase("toggle keyboard")){
-	    		  out.println('{');
+	    		  out.print('{');
+	    		  out.flush();
 	    	  }else if(key_pressed.equalsIgnoreCase("toggle switch")){
-	    		  out.println('}');
-	    	  }else if(key_pressed.equalsIgnoreCase("start scanning")){
-	    		  out.println('[');
+	    		  out.print('}');
+	    		  out.flush();
+	    	  }else if(key_pressed.equalsIgnoreCase("select")){
+	    		  out.print('[');
+	    		  out.flush();
 	    	  }else if(key_pressed.equalsIgnoreCase("previous item")){
-	    		  out.println(']');
+	    		  out.print(']');
+	    		  out.flush();
 	    	  }else if(key_pressed.equalsIgnoreCase("next item")){
-	    		  out.println('|');
-	    	  }else if(key_pressed.equalsIgnoreCase("stop scanning")){
-	    		  out.println('<');
+	    		  out.print('|');
+	    		  out.flush();
+	    	  }else if(key_pressed.equalsIgnoreCase("home")){
+	    		  out.print('\t');
+	    		  out.flush();
+	    	  }else if (key_pressed.equalsIgnoreCase("resume scan")){
+	    		  out.print(',');
+	    		  out.flush();
+	    		  
 	    	  }else{
 	    	  
 	    	  text_string=text_string+key_pressed;
@@ -303,10 +314,12 @@ public class Keyboard extends JPanel implements MouseListener , KeyListener{
 		System.out.println("key pressed: "+arg0.getKeyChar());
 		if(arg0.getKeyChar()==' '){
 			System.out.println("key pressed: "+'`');
-			out.println('`');
+			out.print('`');
+			out.flush();
 		} else if(arg0.getKeyChar()=='\n'){
-			System.out.println("key pressed: "+'~');
-			out.println('~');
+			System.out.println("key pressed: "+'=');
+			out.print('=');
+			out.flush();
 		}
 		
 	}
